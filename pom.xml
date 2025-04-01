@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>uk.gov.dbt.ndtp</groupId>
+  <artifactId>data-extractor</artifactId>
+  <version>0.90.0</version>
+
+  <developers>
+    <developer>
+      <name>IANodeDevelopers</name>
+      <email>NDTP@businessandtrade.gov.uk</email>
+      <organization>Department for Business and Trade</organization>
+      <organizationUrl>https://ndtp.co.uk</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:National-Digital-Twin/data-extractor.git</connection>
+    <developerConnection>scm:git:git@github.com:National-Digital-Twin/data-extractor.git</developerConnection>
+    <url>https://github.com/National-Digital-Twin/data-extractor</url>
+  </scm>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jacoco.argLine/>
+
+    <!-- Plugin Versions -->
+    <plugin.jacoco>0.8.12</plugin.jacoco>
+    <plugin.maven-dependency>3.8.1</plugin.maven-dependency>
+    <plugin.maven-jar>3.4.2</plugin.maven-jar>
+    <plugin.maven-surefire>3.5.3</plugin.maven-surefire>
+    <plugin.spotless>2.44.3</plugin.spotless>
+    <plugin.spotless.gson>2.11.0</plugin.spotless.gson>
+    <plugin.spotless.palantir>2.50.0</plugin.spotless.palantir>
+
+    <!-- Dependency Versions -->
+    <!-- External -->
+    <dependency.avaje>4.0</dependency.avaje>
+    <dependency.aws>2.31.12</dependency.aws>
+    <dependency.aws-crt>0.37.0</dependency.aws-crt>
+    <dependency.junit-jupiter>5.12.1</dependency.junit-jupiter>
+    <dependency.logback>1.5.18</dependency.logback>
+    <dependency.slf4j>2.0.17</dependency.slf4j>
+    <dependency.jackson-core-databind>2.18.3</dependency.jackson-core-databind>
+
+    <!-- Test -->
+    <dependency.junit-jupiter>5.12.1</dependency.junit-jupiter>
+    <dependency.mockito>5.16.1</dependency.mockito>
+    <dependency.mockwebserver>4.12.0</dependency.mockwebserver>
+    <dependency.s3mock>3.12.0</dependency.s3mock>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${dependency.junit-jupiter}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-bom</artifactId>
+        <version>${dependency.mockito}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>${dependency.aws}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- External dependencies -->
+    <!-- Core SDK -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>cognitoidentityprovider</artifactId>
+    </dependency>
+    <!-- JSON Processing -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${dependency.jackson-core-databind}</version>
+    </dependency>
+    <!-- URL Connection HTTP Client -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>url-connection-client</artifactId>
+    </dependency>
+    <!-- AWS Region -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>regions</artifactId>
+    </dependency>
+    <!-- AWS S3 -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk.crt</groupId>
+      <artifactId>aws-crt</artifactId>
+      <version>${dependency.aws-crt}</version>
+    </dependency>
+    <!-- Auth -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>auth</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>apache-client</artifactId>
+      <!-- HTTP client specified. -->
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Config -->
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-config</artifactId>
+      <version>${dependency.avaje}</version>
+    </dependency>
+
+    <!-- Logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${dependency.slf4j}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${dependency.logback}</version>
+    </dependency>
+
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>mockwebserver</artifactId>
+      <version>${dependency.mockwebserver}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.testing</groupId>
+      <artifactId>s3mock-testcontainers</artifactId>
+      <version>${dependency.s3mock}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Common dependencies between main and profiles -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${plugin.maven-surefire}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${plugin.maven-jar}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${plugin.spotless}</version>
+        <configuration>
+          <json>
+            <includes>
+              <include>**/*.json</include>
+            </includes>
+            <gson>
+              <indentSpaces>4</indentSpaces>
+              <version>${plugin.spotless.gson}</version>
+            </gson>
+          </json>
+          <java>
+            <palantirJavaFormat>
+              <version>${plugin.spotless.palantir}</version>
+              <style>PALANTIR</style>
+            </palantirJavaFormat>
+            <licenseHeader>
+              <file>apache-code-header.txt</file>
+            </licenseHeader>
+          </java>
+          <pom>
+            <sortPom>
+              <nrOfIndentSpace>2</nrOfIndentSpace>
+              <endWithNewline>true</endWithNewline>
+              <expandEmptyElements>false</expandEmptyElements>
+              <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
+            </sortPom>
+          </pom>
+          <markdown>
+            <includes>
+              <include>**/*.md</include>
+            </includes>
+            <flexmark/>
+          </markdown>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${plugin.maven-dependency}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>copy-dependencies</id>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <includeScope>compile</includeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <!-- https://javadoc.io/static/org.mockito/mockito-core/5.15.2/org/mockito/Mockito.html#mockito-instrumentation -->
+        <configuration>
+          <argLine>@{jacoco.argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>uk.gov.dbt.ndtp.extractor.DataExtractor</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>analyse</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${plugin.jacoco}</version>
+            <configuration>
+              <propertyName>jacoco.argLine</propertyName>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>report</id>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+                <phase>prepare-package</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>dockerBuild</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>uk.gov.dbt.ndtp.extractor.DataExtractor</mainClass>
+                  <addClasspath>true</addClasspath>
+                  <classpathPrefix>/app/lib/</classpathPrefix>
+                </manifest>
+              </archive>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
