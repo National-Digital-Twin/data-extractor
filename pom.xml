@@ -4,7 +4,7 @@
 
   <groupId>uk.gov.dbt.ndtp</groupId>
   <artifactId>data-extractor</artifactId>
-  <version>0.90.1</version>
+  <version>0.90.2-SNAPSHOT</version>
 
   <developers>
     <developer>
