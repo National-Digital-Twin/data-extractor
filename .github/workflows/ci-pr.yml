@@ -51,4 +51,3 @@ jobs:
         run: |
           echo "${{ fromJSON(steps.meta.outputs.tags) }}"
           echo "${{ fromJSON(steps.meta.outputs.labels) }}"
-
