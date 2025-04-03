@@ -110,3 +110,50 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  merge-into-develop:
+    name: Merge release branch back into develop
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      - verify
+      - release-notes
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify release branch exists
+        id: exists
+        run: |
+          VERSION=${{ needs.verify.outputs.version }}
+          echo "Checking that branch release/$VERSION exists"
+          
+          if [[ $(git ls-remote --exit-code --heads origin "refs/heads/release/$VERSION" ) ]]; then
+            echo "✅ Release branch exists"
+            echo "branch_exists=true" >> $GITHUB_OUTPUT
+            echo "branch_name=release/$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Release branch does not exist, skipping develop sync"
+            echo "branch_exists=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Configure git
+        if: ${{ steps.exists.outputs.branch_exists == 'true' }}
+        run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Sync develop
+        if: ${{ steps.exists.outputs.branch_exists == 'true' }}
+        run: |
+          git fetch origin develop
+          git checkout develop
+          git merge origin/${{ steps.exists.outputs.branch_name }} --no-edit || {
+            echo "Merge conflict! Manual resolution required."
+            exit 1
+          }
+          git push origin develop
+      - name: Clean up branch
+        if: ${{ steps.exists.outputs.branch_exists == 'true' }}
+        run: |
+          git push -d origin ${{ steps.exists.outputs.branch_name }}
