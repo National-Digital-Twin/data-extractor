@@ -47,7 +47,3 @@ jobs:
           tags: |
             type=raw,value=latest
             type=raw,value=0.90.3
-      - name: Echo
-        run: |
-          echo "${{ fromJSON(steps.meta.outputs.tags) }}"
-          echo "${{ fromJSON(steps.meta.outputs.labels) }}"
