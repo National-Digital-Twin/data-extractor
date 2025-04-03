@@ -32,3 +32,23 @@ jobs:
           cache: maven
       - name: Lint
         run: ./mvnw $MAVEN_CLI_OPTS spotless:check
+
+  docker_tests:
+    env:
+      REGISTRY: "ghcr.io"
+      IMAGE_NAME: ${{ github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=raw,value=0.90.3
+      - name: Echo
+        run: |
+          echo "${{ fromJSON(steps.meta.outputs.tags) }}"
+          echo "${{ fromJSON(steps.meta.outputs.labels) }}"
+
