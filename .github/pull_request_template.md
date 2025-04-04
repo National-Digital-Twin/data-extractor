@@ -26,6 +26,7 @@
 
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
+- [ ] The base branch is set to `develop`
 - [ ] It contains only changes required by issue (does not contain other PR)
 - [ ] Includes link to an issue (if apply)
 - [ ] I have added tests to cover my changes.
