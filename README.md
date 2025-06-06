@@ -69,6 +69,7 @@ The data extractor process consists of three parts:
 ## Testing Guide
 
 ### Running Unit Tests
+
 Navigate to the root of the project and run `mvn test` to run the tests for the repository.
 
 ## Public Funding Acknowledgment
